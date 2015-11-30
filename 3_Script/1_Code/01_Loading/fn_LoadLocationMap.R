@@ -1,0 +1,3 @@
+LoadLocationMap <- function(locationMappingFile) {
+  
+}
