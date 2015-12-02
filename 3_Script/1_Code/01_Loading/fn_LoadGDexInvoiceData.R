@@ -8,7 +8,7 @@ LoadGDexInvoiceData <- function(invoicePath) {
   
   functionName <- "LoadOMSData"
   
-  loginfo(paste0(functionName, " - Function Start"), logger = nameReport)
+  loginfo(paste0(functionName, " - Function Start"), logger = reportName)
   
   invoiceData <- data.frame(pickupDate = character(),
                             trackingNumber = character(),
@@ -32,7 +32,8 @@ LoadGDexInvoiceData <- function(invoicePath) {
                             promotionDiscount = numeric(),
                             GST = numeric(),
                             total = numeric(),
-                            GLCode = character())
+                            GLCode = character(),
+                            invoiceFile = character())
   
   filesCount <- sum(grepl("\\.(xls|xlsx)",list.files(invoicePath))) -
     sum(grepl("(^\\~\\$)", list.files(invoicePath)))
@@ -63,10 +64,12 @@ LoadGDexInvoiceData <- function(invoicePath) {
                                     "discount", "promotionDiscount", "GST",
                                     "total", "GLCode")
         
+        currentFileData %<>% mutate(invoiceFile = file)
+        
         invoiceData <- rbind_list(invoiceData,currentFileData)
       
       }, warning = function(war) {
-        logwarn(paste(functionName, file, war, sep = " - "), logger = nameReport)
+        logwarn(paste(functionName, file, war, sep = " - "), logger = reportName)
       }, error = function(err) {
         logerror(paste(functionName, file, err, sep = " - "), logger = consoleLog)
       })
@@ -81,7 +84,7 @@ LoadGDexInvoiceData <- function(invoicePath) {
   
   cat("\r\n")
   
-  loginfo(paste0(functionName, " - Function End"), logger = nameReport)
+  loginfo(paste0(functionName, " - Function End"), logger = reportName)
   
   invoiceData
 }
