@@ -8,7 +8,7 @@ LoadOMSData <- function(omsDataFolder){
   
   functionName <- "LoadOMSData"
 
-  loginfo(paste0(functionName, " - Function Start"), logger = nameReport)
+  loginfo(paste0(functionName, " - Function Start"), logger = reportName)
   
   dateUpdate <- NULL
   for (file in list.files(omsDataFolder)){
@@ -92,11 +92,10 @@ LoadOMSData <- function(omsDataFolder){
           OMSData <- rbind_list(OMSData,currentFileData)
           
         }, warning = function(war) {
-          logwarn(paste(functionName, war, sep = " - "), logger = nameReport)
+          logwarn(paste(functionName, war, sep = " - "), logger = reportName)
         }, error = function(err) {
           logerror(paste(functionName, err, sep = " - "), logger = consoleLog)
         })
-        
         
         iProgress <- iProgress + 1
         setTxtProgressBar(pb, iProgress)
@@ -112,7 +111,7 @@ LoadOMSData <- function(omsDataFolder){
     save(OMSData, file = "3_Script/3_RData/OMSData.RData")
   }
   
-  loginfo(paste0(functionName, " - Function End"), logger = nameReport)
+  loginfo(paste0(functionName, " - Function End"), logger = reportName)
   
   OMSData
 }
