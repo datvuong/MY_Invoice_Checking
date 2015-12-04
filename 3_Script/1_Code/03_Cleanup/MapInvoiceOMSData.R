@@ -70,8 +70,8 @@ suppressMessages({
              unitPrice, paidPrice, shippingFee, shippingSurcharge,
              skus, actualWeight, volumetricWeight, 
              finalWeight, RTS_Date, Shipped_Date,
-             Cancelled_Date, Delivered_Date, payment_method,
-             tax_class) %>%
+             Cancelled_Date, Delivered_Date, payment_method, 
+             Seller_Code, tax_class) %>%
       filter(!duplicated(tracking_number))
     
     iProgress <- iProgress + 1
