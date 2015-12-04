@@ -33,6 +33,7 @@ Temporary Items
 # My configuration
 *.ini
 *.*
+*.sql
 !.gitattributes
 !.gitignore
 !*.R
