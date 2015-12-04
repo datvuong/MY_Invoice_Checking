@@ -33,6 +33,9 @@ tryCatch({
   source("3_Script/1_Code/03_Cleanup/CheckCODFee.R")
   source("3_Script/1_Code/03_Cleanup/CheckWeight.R")
   source("3_Script/1_Code/03_Cleanup/gdex/CheckRateCard.R")
+
+  source("5_Script/1_Code/05_Reports/SummaryReport.R")
+  source("5_Script/1_Code/05_Reports/OutputRawData.R")
   
   variableFilePath <- "1_Input/01_gdex/commonVariables.csv"
   omsDataFolder <- "1_Input/00_OMS_DATA"
@@ -87,7 +90,9 @@ tryCatch({
   
   OutputRawData(finalOutput, paste0("2_Output/gdex/checkedInvoice_",dateReport,".csv"))
   SummaryReport(finalOutput, paste0("2_Output/gdex/summaryReport_",dateReport,".csv"))
-  
+    
+}, error = function(err) {
+  logerror(paste("Main Script", err), logger = consoleLog)
+}, finally = {
   loginfo("Done Invoice Checking!!!", logger = consoleLog)
-  
-})
+}))
