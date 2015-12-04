@@ -89,7 +89,9 @@ tryCatch({
                                                      ifelse(rateCardCheck != "OKAY", rateCardCheck, "OKAY"))))))
 
   exceedThresholdTrackingNumber <- finalOutput %>%
-    filter(manualCheck == "EXCEED_THRESHOLD")
+    filter(manualCheck == "EXCEED_THRESHOLD") %>%
+    select(deliveryCompany, trackingNumber, packageChargeableWeight, packageChargeableWeight, carryingFee,
+           lazadaWeight, lazadaDimWeight, lazadaCalFee)
   
   OutputRawData(finalOutput, paste0("2_Output/gdex/checkedInvoice_",dateReport,".csv"))
   OutputRawData(exceedThresholdTrackingNumber, paste0("2_Output/gdex/exceedThresholdTrackingNumber_",dateReport,".csv"))
