@@ -87,8 +87,12 @@ tryCatch({
                                        ifelse(StatusCheck != "OKAY", StatusCheck,
                                               ifelse(weightCheck != "OKAY", weightCheck,
                                                      ifelse(rateCardCheck != "OKAY", rateCardCheck, "OKAY"))))))
+
+  exceedThresholdTrackingNumber <- finalOutput %>%
+    filter(manualCheck == "EXCEED_THRESHOLD")
   
   OutputRawData(finalOutput, paste0("2_Output/gdex/checkedInvoice_",dateReport,".csv"))
+  OutputRawData(exceedThresholdTrackingNumber, paste0("2_Output/gdex/exceedThresholdTrackingNumber_",dateReport,".csv"))
   SummaryReport(finalOutput, paste0("2_Output/gdex/summaryReport_",dateReport,".csv"))
     
 }, error = function(err) {
