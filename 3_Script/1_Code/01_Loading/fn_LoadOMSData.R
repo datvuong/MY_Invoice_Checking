@@ -1,10 +1,12 @@
 LoadOMSData <- function(omsDataFolder){
   
+  suppressMessages({
   require(dplyr)
   require(tools)
   require(magrittr)
   require(methods)
   require(logging)
+  })
   
   functionName <- "LoadOMSData"
 
