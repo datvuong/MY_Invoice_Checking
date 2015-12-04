@@ -44,4 +44,4 @@ LEFT JOIN oms_live.ims_sales_order_item_status_history cancelled ON soi.id_sales
 LEFT JOIN screport.sales_order_item scsoi ON soi.id_sales_order_item=scsoi.src_id
 LEFT JOIN screport.seller seller ON scsoi.fk_seller=seller.id_seller
 WHERE 
-	(rts.created_at between '2015-10-01' and '2015-11-01')
+	(rts.created_at between '2015-10-01' and '2015-11-01')	
