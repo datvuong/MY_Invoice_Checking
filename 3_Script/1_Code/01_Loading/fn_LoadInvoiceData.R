@@ -57,7 +57,6 @@ suppressMessages({
     iProgress <- 0
     setTxtProgressBar(pb, iProgress)
     
-    setAs("character","myDateTime", function(from) as.POSIXct(gsub('"','',from), format="%Y-%m-%d %H:%M:%S"))
     setClass("myInteger")
     setAs("character","myInteger", function(from) as.integer(gsub('"','',from)))
     setClass("myNumeric")
