@@ -95,4 +95,4 @@ tryCatch({
   logerror(paste("Main Script", err), logger = consoleLog)
 }, finally = {
   loginfo("Done Invoice Checking!!!", logger = consoleLog)
-}))
+})
