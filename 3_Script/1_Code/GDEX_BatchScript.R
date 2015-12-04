@@ -34,8 +34,8 @@ tryCatch({
   source("3_Script/1_Code/03_Cleanup/CheckWeight.R")
   source("3_Script/1_Code/03_Cleanup/gdex/CheckRateCard.R")
 
-  source("5_Script/1_Code/05_Reports/SummaryReport.R")
-  source("5_Script/1_Code/05_Reports/OutputRawData.R")
+  source("3_Script/1_Code/05_Reports/SummaryReport.R")
+  source("3_Script/1_Code/05_Reports/OutputRawData.R")
   
   variableFilePath <- "1_Input/01_gdex/commonVariables.csv"
   omsDataFolder <- "1_Input/00_OMS_DATA"
