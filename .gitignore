@@ -33,6 +33,7 @@ Temporary Items
 # My configuration
 *.ini
 *.*
+!3_Script/1_Code/01_Loading/queries/*.sql
 !.gitattributes
 !.gitignore
 !*.R
@@ -40,4 +41,4 @@ Temporary Items
 !*.md
 !*.vbs
 !*.bat
-packrat/lib*/
+
