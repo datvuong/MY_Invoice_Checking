@@ -73,7 +73,7 @@ tryCatch({
   finalOutput <- checkedInvoiceData %>%
     select(deliveryCompany, pacagePickupDate, pacagePODDate,
            invoiceNumber, packageNumber, trackingNumber,
-           trackingNumberRTS, order_nr, packageChargeableWeight,
+           trackingNumberRTS, order_nr, packageChargeableWeight, PackageStatus,
            lazadaWeight = actualWeight, lazadaDimWeight = volumetricWeight,
            carryingFee, redeliveryFee, rejectionFee, CODFee, specialAreaFee,
            specialHandlingFee, insuranceFee, lazadaCalFee, feeSuggested, originBranch,
