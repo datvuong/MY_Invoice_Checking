@@ -16,8 +16,8 @@ suppressMessages({
       mutate(StatusCheck = ifelse(ExistenceCheck == "OKAY", 
                                   ifelse(is.na(Shipped_Date), "NO_SHIPPED","OKAY"), NA),
              PackageStatus = ifelse(!is.na(Delivered_Date), "DELIVERED",
-                                    ifelse(!is.na(Cancelled_Date), "CANCELLED"),
-                                           ifelse(!is.na("Shipped_Date"), "SHIPPED", "NO_SHIPPED")))
+                                    ifelse(!is.na(Cancelled_Date), "CANCELLED",
+                                           ifelse(!is.na("Shipped_Date"), "SHIPPED", "NO_SHIPPED"))))
     
     for (iWarn in warnings()){
       logwarn(paste(functionName, iWarn), logger = reportName)
