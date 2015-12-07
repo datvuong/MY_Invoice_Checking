@@ -77,7 +77,7 @@ tryCatch({
            lazadaWeight = actualWeight, lazadaDimWeight = volumetricWeight,
            carryingFee, redeliveryFee, rejectionFee, CODFee, specialAreaFee,
            specialHandlingFee, insuranceFee, lazadaCalFee, feeSuggested, originBranch,
-           destinationBranch, deliveryZoneZipCode, rateType, skus, ExistenceCheck, 
+           destinationBranch, deliveryZoneZipCode, rateType, skus, Seller_Code, ExistenceCheck, 
            duplicatedFlag, duplicatedFile, StatusCheck, weightDifference, weightCheck,
            rateCardCheck)
   
@@ -92,9 +92,14 @@ tryCatch({
     filter(manualCheck == "EXCEED_THRESHOLD") %>%
     select(deliveryCompany, trackingNumber, packageChargeableWeight, packageChargeableWeight, carryingFee,
            lazadaWeight, lazadaDimWeight, lazadaCalFee)
+
+  notFoundTrackingNumber <- finalOutput %>%
+    filter(manualCheck == "NOT_FOUND") %>%
+    select(deliveryCompany, trackingNumber, Seller_Code)
   
   OutputRawData(finalOutput, paste0("2_Output/gdex/checkedInvoice_",dateReport,".csv"))
   OutputRawData(exceedThresholdTrackingNumber, paste0("2_Output/gdex/exceedThresholdTrackingNumber_",dateReport,".csv"))
+  OutputRawData(notFoundTrackingNumber, paste0("2_Output/gdex/notFoundTrackingNumber_",dateReport,".csv"))
   SummaryReport(finalOutput, paste0("2_Output/gdex/summaryReport_",dateReport,".csv"))
     
 }, error = function(err) {
