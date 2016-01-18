@@ -14,20 +14,19 @@ MapInvoiceOMSData <- function(invoiceData, OMSData, dimWeightFactor, singleItemT
   invoiceOMSMapped <- tryCatch({
     
     OMSData %<>%
-      mutate(actualWeight = sum(package_weight)) %>%
-      mutate(volumetricWeight = sum(volumetricDimension / dimWeightFactor)) %>%
+      mutate(actualWeight = package_weight) %>%
+      mutate(volumetricWeight = volumetricDimension / dimWeightFactor) %>%
       mutate(finalWeight = ifelse(actualWeight > volumetricWeight, actualWeight,
                                   volumetricWeight) * singleItemTolerance) 
     
     OMSDataTrackingFinal <-  OMSData %>%
-      select(order_nr, tracking_number, itemsCount,
-             unitPrice, paidPrice, shippingFee, shippingSurcharge,
-             skus, actualWeight, volumetricWeight, 
+      select(order_nr, tracking_number, 
+             unit_price, paid_price, shippingFee, shippingSurcharge,
+             skus_names, actualWeight, volumetricWeight, 
              finalWeight, RTS_Date = rts, Shipped_Date = shipped,
              Cancelled_Date = cancelled, Delivered_Date = delivered, payment_method, 
              shipment_provider_name, level_2_name, level_3_name, level_4_name,
-             Seller_Code, Seller, tax_class) %>%
-      filter(!duplicated(tracking_number))
+             Seller_Code, Seller, tax_class)
     
     invoiceOMSMapped <- left_join(invoiceData, OMSDataTrackingFinal,
                                   by = c("trackingNumber" = "tracking_number"))
