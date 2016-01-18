@@ -1,6 +1,6 @@
 MapInvoiceOMSData <- function(invoiceData, OMSData, dimWeightFactor, singleItemTolerance,
                               multipleItemsTolerance) {
-suppressMessages({
+  suppressMessages({
     require(dplyr)
     require(tools)
     require(magrittr)
@@ -13,77 +13,24 @@ suppressMessages({
   
   invoiceOMSMapped <- tryCatch({
     
-    pb <- txtProgressBar(min=0,max=8, style = 3)
-    iProgress <- 0
-    setTxtProgressBar(pb, iProgress)
-    
-    OMSDataNoDup <- OMSData %>%
-      mutate(uniqueKey = paste0(tracking_number, id_sales_order_item)) %>%
-      arrange(desc(Shipped_Date), desc(Delivered_Date), desc(Cancelled_Date)) %>%
-      filter(!duplicated(uniqueKey))
-    
-    iProgress <- iProgress + 1
-    setTxtProgressBar(pb, iProgress)
-    
-    OMSDataTracking <- OMSDataNoDup %>% 
-      group_by(tracking_number) %>%
-      mutate(itemsCount = n_distinct(id_sales_order_item)) %>%
-      mutate(unitPrice = sum(unit_price)) %>%
-      mutate(paidPrice = sum(paid_price)) 
-    
-    iProgress <- iProgress + 1
-    setTxtProgressBar(pb, iProgress)
-    
-    OMSDataTracking %<>%
-      mutate(shippingFee = sum(shipping_fee)) %>%
-      mutate(shippingSurcharge = sum(shipping_surcharge)) %>%
-      mutate(skus = paste(sku, collapse = "/")) 
-    
-    iProgress <- iProgress + 1
-    setTxtProgressBar(pb, iProgress)
-    
-    OMSDataTracking %<>%
+    OMSData %<>%
       mutate(actualWeight = sum(package_weight)) %>%
-      mutate(volumetricWeight = sum((package_length * package_width * package_height) / dimWeightFactor)) %>%
+      mutate(volumetricWeight = sum(volumetricDimension / dimWeightFactor)) %>%
       mutate(finalWeight = ifelse(actualWeight > volumetricWeight, actualWeight,
-                                  volumetricWeight) *
-               (1 + ifelse(itemsCount == 1, singleItemTolerance, multipleItemsTolerance))) 
+                                  volumetricWeight) * singleItemTolerance) 
     
-    iProgress <- iProgress + 1
-    setTxtProgressBar(pb, iProgress)
-    
-    iProgress <- iProgress + 1
-    setTxtProgressBar(pb, iProgress)
-    
-    OMSDataTracking %<>%
-      mutate(RTS_Date = last(RTS_Date)) %>%
-      mutate(Shipped_Date = last(Shipped_Date)) %>%
-      mutate(Cancelled_Date = last(Cancelled_Date)) %>%
-      mutate(Delivered_Date = last(Delivered_Date)) %>%
-      ungroup()
-    
-    iProgress <- iProgress + 1
-    setTxtProgressBar(pb, iProgress)
-    
-    OMSDataTrackingFinal <-  OMSDataTracking %>%
+    OMSDataTrackingFinal <-  OMSData %>%
       select(order_nr, tracking_number, itemsCount,
              unitPrice, paidPrice, shippingFee, shippingSurcharge,
              skus, actualWeight, volumetricWeight, 
-             finalWeight, RTS_Date, Shipped_Date,
-             Cancelled_Date, Delivered_Date, payment_method, 
-             Seller_Code, tax_class) %>%
+             finalWeight, RTS_Date = rts, Shipped_Date = shipped,
+             Cancelled_Date = cancelled, Delivered_Date = delivered, payment_method, 
+             shipment_provider_name, level_2_name, level_3_name, level_4_name,
+             Seller_Code, Seller, tax_class) %>%
       filter(!duplicated(tracking_number))
-    
-    iProgress <- iProgress + 1
-    setTxtProgressBar(pb, iProgress)
     
     invoiceOMSMapped <- left_join(invoiceData, OMSDataTrackingFinal,
                                   by = c("trackingNumber" = "tracking_number"))
-    
-    iProgress <- iProgress + 1
-    setTxtProgressBar(pb, iProgress)
-    
-    cat("\r\n")
 
     for (iWarn in warnings()){
       logwarn(paste(functionName, iWarn), logger = reportName)
