@@ -60,7 +60,7 @@ tryCatch({
   
   
   loginfo("Mapping Invoice with OMS Data - This would take around 15 mins", logger = consoleLog)
-  invoiceOMSData <- MapInvoiceOMSData(newInvoiceData, OMSData, dimWeightFactor,
+  invoiceOMSData <- MapInvoiceOMSData(newInvoiceData, packageDataBased, dimWeightFactor,
                                       singleItemTolerance, multipleItemsTolerance)
   
   checkedInvoiceData <- CheckExistence(invoiceOMSData)
