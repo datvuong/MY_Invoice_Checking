@@ -3,7 +3,6 @@ source("3_Script/1_Code/00_init.R")
 tryCatch({
   
   loginfo("Initial Setup", logger = reportName)
-  source("3_Script/1_Code/01_Loading/fn_LoadOMSData.R")
   source("3_Script/1_Code/01_Loading/fn_LoadInvoiceData.R")
   source("3_Script/1_Code/01_Loading/gdex/fn_LoadRateCards.R")
   source("3_Script/1_Code/01_Loading/gdex/fn_LoadLocationMap.R")
@@ -17,12 +16,11 @@ tryCatch({
   source("3_Script/1_Code/03_Cleanup/CheckCODFee.R")
   source("3_Script/1_Code/03_Cleanup/CheckWeight.R")
   source("3_Script/1_Code/03_Cleanup/gdex/CheckRateCard.R")
-
+  
   source("3_Script/1_Code/05_Reports/SummaryReport.R")
   source("3_Script/1_Code/05_Reports/OutputRawData.R")
   
   variableFilePath <- "1_Input/01_gdex/commonVariables.csv"
-  omsDataFolder <- "1_Input/00_OMS_DATA"
   invoiceDataFolder <- "1_Input/01_gdex/new_invoices"
   oldInvoiceDataFolder <- "1_Input/01_gdex/old_invoices"
   rateCardFile <- "1_Input/01_gdex/rate_cards/gdex_ratecards.csv"
@@ -31,7 +29,7 @@ tryCatch({
   
   loginfo("Loading Input Data", logger = consoleLog)
   loginfo("Loading OMS Data", logger = consoleLog)
-  OMSData <- LoadOMSData(omsDataFolder)
+  load("1_Input/RData/packageDataBased.RData")
   loginfo("Loading New Invoice Data", logger = consoleLog)
   newInvoiceData <- LoadInvoiceData(invoiceDataFolder)
   oldInvoiceData <- LoadInvoiceData(oldInvoiceDataFolder)
@@ -43,7 +41,7 @@ tryCatch({
   LoadCommonVariables(variableFilePath)
   
   loginfo("Mapping Invoice with OMS Data - This would take around 15 mins", logger = consoleLog)
-  invoiceOMSData <- MapInvoiceOMSData(newInvoiceData, OMSData, dimWeightFactor,
+  invoiceOMSData <- MapInvoiceOMSData(newInvoiceData, packageDataBased, dimWeightFactor,
                                       singleItemTolerance, multipleItemsTolerance)
   
   checkedInvoiceData <- CheckExistence(invoiceOMSData)
@@ -71,12 +69,12 @@ tryCatch({
                                        ifelse(StatusCheck != "OKAY", StatusCheck,
                                               ifelse(weightCheck != "OKAY", weightCheck,
                                                      ifelse(rateCardCheck != "OKAY", rateCardCheck, "OKAY"))))))
-
+  
   exceedThresholdTrackingNumber <- finalOutput %>%
     filter(manualCheck == "EXCEED_THRESHOLD") %>%
     select(deliveryCompany, trackingNumber, packageChargeableWeight, packageChargeableWeight, carryingFee,
            lazadaWeight, lazadaDimWeight, lazadaCalFee)
-
+  
   notFoundTrackingNumber <- finalOutput %>%
     filter(manualCheck == "NOT_FOUND") %>%
     select(deliveryCompany, trackingNumber, Seller_Code)
@@ -85,7 +83,7 @@ tryCatch({
   OutputRawData(exceedThresholdTrackingNumber, paste0("2_Output/gdex/exceedThresholdTrackingNumber_",dateReport,".csv"))
   OutputRawData(notFoundTrackingNumber, paste0("2_Output/gdex/notFoundTrackingNumber_",dateReport,".csv"))
   SummaryReport(finalOutput, paste0("2_Output/gdex/summaryReport_",dateReport,".csv"))
-    
+  
 }, error = function(err) {
   logerror(paste("Main Script", err), logger = consoleLog)
 }, finally = {

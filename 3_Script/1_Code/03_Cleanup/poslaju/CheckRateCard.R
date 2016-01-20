@@ -26,8 +26,7 @@ CheckRateCard <- function(invoiceData, rateCard, locationMap, stateMap,
     
     rateCardChecked <- invoiceData
     rateCardChecked %<>%
-      rename(destinationZone = destinationBranch) %>%
-      mutate(destinationZone = toupper(trimws(destinationZone)))
+      mutate(destinationZone = toupper(trimws(destinationBranch)))
     
     rateCardData <- rateCard %>%
       select(zone,first_5kg, add_1kg,first_500g,add_250g,from2kg_2.5kg,add_500g,surcharge) %>%
@@ -42,11 +41,11 @@ CheckRateCard <- function(invoiceData, rateCard, locationMap, stateMap,
     
     rateCardChecked %<>%
       mutate(calculatedWeight = ifelse(is.na(finalWeight), packageChargeableWeight, finalWeight)) %>%
-      mutate(lazadaCalFee = ifelse(destinationZone = "1" || destinationZone = "2" , 
-                                   (first_5kg + max((round(calculatedWeight + 0.5, 1) - 5), 0) * add_1kg), 
+      mutate(lazadaCalFee = ifelse((destinationZone == "1") | (destinationZone == "2") , 
+                                   (first_5kg + ceiling(pmax((calculatedWeight - 5), 0)) * add_1kg), 
                                    (ifelse(calculatedWeight < 2,
-                                            first_500g + ceiling(max((calculatedWeight - 0.5),0)/0.25) * add_250g, 
-                                            from2kg_2.5kg + ceiling(max((calculatedWeight - 2.5),0)/0.5) * add_500g))) * (1 + surcharge))
+                                            first_500g + ceiling(pmax((calculatedWeight - 0.5),0)/0.25) * add_250g, 
+                                            from2kg_2.5kg + ceiling(pmax((calculatedWeight - 2.5),0)/0.5) * add_500g))) * (1 + surcharge))
     
     rateCardChecked %<>%
       mutate(feeSuggested = ifelse(carryingFee - lazadaCalFee > feeDifferenceThreshold,
