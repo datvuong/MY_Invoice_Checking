@@ -47,7 +47,7 @@ tryCatch({
   
   loginfo("Loading Input Data", logger = consoleLog)
   loginfo("Loading OMS Data", logger = consoleLog)
-  OMSData <- LoadOMSData(omsDataFolder)
+  load("1_Input/RData/packageDataBased.RData")
   loginfo("Loading New Invoice Data", logger = consoleLog)
   newInvoiceData <- LoadInvoiceData(invoiceDataFolder)
   oldInvoiceData <- LoadInvoiceData(oldInvoiceDataFolder)
@@ -70,7 +70,7 @@ tryCatch({
   checkedInvoiceData <- CheckWeight(checkedInvoiceData, weightDifferenceThreshold)
   checkedInvoiceData <- CheckRateCard(checkedInvoiceData, rateCard, locationMap,
                                       stateMap, feeDifferenceThreshold)
-  
+
   finalOutput <- checkedInvoiceData %>%
     select(deliveryCompany, pacagePickupDate, pacagePODDate,
            invoiceNumber, packageNumber, trackingNumber,
@@ -78,7 +78,7 @@ tryCatch({
            lazadaWeight = actualWeight, lazadaDimWeight = volumetricWeight,
            carryingFee, redeliveryFee, rejectionFee, CODFee, specialAreaFee,
            specialHandlingFee, insuranceFee, lazadaCalFee, feeSuggested, originBranch,
-           destinationBranch, deliveryZoneZipCode, rateType, skus, Seller_Code, ExistenceCheck, 
+           destinationBranch, deliveryZoneZipCode, rateType, skus_names, Seller_Code, ExistenceCheck, 
            duplicatedFlag, duplicatedFile, StatusCheck, weightDifference, weightCheck,
            rateCardCheck)
   
