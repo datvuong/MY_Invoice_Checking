@@ -49,8 +49,9 @@ tryCatch({
   checkedInvoiceData <- CheckOMSStatus(checkedInvoiceData)
   checkedInvoiceData <- CheckCODFee(checkedInvoiceData)
   checkedInvoiceData <- CheckWeight(checkedInvoiceData, weightDifferenceThreshold)
-  checkedInvoiceData <- CheckRateCard(checkedInvoiceData, rateCard, locationMap,
-                                      stateMap, feeDifferenceThreshold)
+  checkedInvoiceData <- CheckRateCard(invoiceData = checkedInvoiceData, rateCard = rateCard, 
+                                      locationMap = locationMap, stateMap = stateMap,
+                                      feeDifferenceThreshold = feeDifferenceThreshold)
   
   finalOutput <- checkedInvoiceData %>%
     select(deliveryCompany, pacagePickupDate, pacagePODDate,
@@ -59,7 +60,7 @@ tryCatch({
            lazadaWeight = actualWeight, lazadaDimWeight = volumetricWeight,
            carryingFee, redeliveryFee, rejectionFee, CODFee, specialAreaFee,
            specialHandlingFee, insuranceFee, lazadaCalFee, feeSuggested, originBranch,
-           destinationBranch, deliveryZoneZipCode, rateType, skus, Seller_Code, ExistenceCheck, 
+           destinationBranch, deliveryZoneZipCode, rateType, skus_names, Seller_Code, ExistenceCheck, 
            duplicatedFlag, duplicatedFile, StatusCheck, weightDifference, weightCheck,
            rateCardCheck)
   
