@@ -7,7 +7,7 @@ suppressMessages({
     require(logging)
   })
   
-  functionName <- "LoadGDexInvoiceData"
+  functionName <- "LoadInvoiceData"
   loginfo(paste("Function", functionName, "started"), logger = reportName)
   
   invoiceData <- tryCatch({
